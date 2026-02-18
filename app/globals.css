@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+:root {
+  --orange: #E8900A;
+  --orange-bright: #F5A623;
+  --orange-dark: #B5700A;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: #111111;
+  color: #E8E8E8;
+  font-family: sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn-orange {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #E8900A 0%, #F5A623 50%, #B5700A 100%);
+  color: #111111;
+  font-size: 1.25rem;
+  letter-spacing: 0.08em;
+  padding: 0.85rem 2.5rem;
+  border-radius: 4px;
+  border: 1px solid #F5A623;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  color: #F5A623;
+  font-size: 1.1rem;
+  padding: 0.75rem 2rem;
+  border-radius: 4px;
+  border: 2px solid #E8900A;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.category-card {
+  background: #222222;
+  border: 1px solid #333333;
+  border-top: 3px solid #E8900A;
+  border-radius: 6px;
+  padding: 1.5rem;
+  transition: all 0.25s ease;
+}
+
+.nav-link {
+  color: #A0A0A0;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.4rem 0.1rem;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+}
