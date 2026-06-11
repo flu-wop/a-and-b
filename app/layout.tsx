@@ -1,7 +1,29 @@
 import type { Metadata } from "next";
+import { Bebas_Neue, Barlow, Barlow_Condensed } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+
+const bebasNeue = Bebas_Neue({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const barlow = Barlow({
+  weight: ["400", "500", "600"],
+  subsets: ["latin"],
+  variable: "--font-body",
+  display: "swap",
+});
+
+const barlowCondensed = Barlow_Condensed({
+  weight: ["400", "600", "700"],
+  subsets: ["latin"],
+  variable: "--font-condensed",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -38,8 +60,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen flex flex-col">
+    <html lang="en" className={`${bebasNeue.variable} ${barlow.variable} ${barlowCondensed.variable}`}>
+      <body className="min-h-screen flex flex-col bg-bg-deep text-text-primary">
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
