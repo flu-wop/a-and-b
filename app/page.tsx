@@ -60,26 +60,26 @@ export default function HomePage() {
   return (
     <>
       {/* ── HERO ──────────────────────────────────────────────────────────── */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/warehouse-hero.jpg"
-            alt="A&B Supply & Surplus warehouse"
-            fill
-            priority
-            className="object-cover object-top"
-            sizes="100vw"
-          />
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(to bottom, rgba(17,17,17,0.35) 0%, rgba(17,17,17,0.2) 40%, rgba(17,17,17,0.92) 100%)",
-            }}
-          />
-        </div>
+      <section
+        className="relative min-h-screen flex items-center justify-center overflow-hidden"
+        style={{
+          background: "linear-gradient(160deg, #111111 0%, #1A1A1A 40%, #111111 70%, #0D0D0D 100%)",
+        }}
+      >
+        {/* Diagonal stripe texture */}
+        <div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{ backgroundImage: "repeating-linear-gradient(135deg, #E8900A 0px, #E8900A 1px, transparent 1px, transparent 60px)" }}
+          aria-hidden="true"
+        />
+        {/* Bottom fade */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-48"
+          style={{ background: "linear-gradient(to bottom, transparent, #111111)" }}
+          aria-hidden="true"
+        />
 
-        <div className="relative z-10 text-center px-4 max-w-5xl mx-auto pt-[420px]">
+        <div className="relative z-10 text-center px-4 max-w-5xl mx-auto pt-28 pb-20">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl text-white mb-4 leading-tight drop-shadow-lg font-display">
             Parts that ship{" "}
             <span className="text-orange-bright italic">tomorrow.</span>
