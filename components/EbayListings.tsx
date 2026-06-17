@@ -58,7 +58,21 @@ export default function EbayListings() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (error || (!loading && listings.length === 0)) return null;
+  if (error || (!loading && listings.length === 0)) {
+    return (
+      <section className="py-20 px-4" style={{ background: "#161616" }}>
+        <div className="max-w-7xl mx-auto text-center">
+          <p className="eyebrow mb-3">Live on eBay Now</p>
+          <h2 className="text-4xl sm:text-5xl text-white font-display mb-4">Featured Listings</h2>
+          <div className="section-divider mb-10" />
+          <p className="text-text-muted mb-8">Browse our full inventory of 686 industrial surplus listings on eBay.</p>
+          <a href="https://www.ebay.com/str/atob" target="_blank" rel="noopener noreferrer" className="btn-orange text-lg">
+            Shop All Listings on eBay
+          </a>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-20 px-4" style={{ background: "#161616" }}>
