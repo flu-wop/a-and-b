@@ -159,40 +159,108 @@ export default function AboutPage() {
             <h2 className="text-4xl sm:text-5xl text-white font-display">Inside Our Warehouse</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Warehouse placeholder */}
             <div
               className="relative rounded-lg overflow-hidden"
-              style={{ border: "2px solid #333", minHeight: "260px", background: "#1C1C1C" }}
+              style={{ border: "2px solid #333", minHeight: "260px", background: "#111" }}
             >
-              <Image
-                src="/warehouse-hero.jpg"
-                alt="A&B Supply & Surplus warehouse"
-                width={700}
-                height={400}
-                className="w-full h-64 object-cover"
-              />
-              <div className="absolute bottom-0 left-0 right-0 px-4 py-3 bg-bg-deep/90">
-                <p className="text-text-primary text-sm font-semibold font-condensed">
-                  Thousands of parts ready to ship
-                </p>
+              <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" className="w-full h-64" aria-hidden="true">
+                {/* Floor */}
+                <rect x="0" y="220" width="600" height="80" fill="#161616" />
+                <line x1="0" y1="220" x2="600" y2="220" stroke="#2A2A2A" strokeWidth="2" />
+                {/* Back wall */}
+                <rect x="0" y="0" width="600" height="220" fill="#111" />
+                {/* Ceiling lights */}
+                {[60,180,300,420,540].map(x => (
+                  <g key={x}>
+                    <rect x={x-20} y="0" width="40" height="6" fill="#333" />
+                    <line x1={x} y1="6" x2={x} y2="20" stroke="#444" strokeWidth="2" />
+                    <ellipse cx={x} cy="22" rx="16" ry="6" fill="#2a2a1a" stroke="#554" strokeWidth="1" />
+                    <ellipse cx={x} cy="22" rx="14" ry="5" fill="#E8900A" opacity="0.15" />
+                    {/* Light cone */}
+                    <polygon points={`${x-30},220 ${x+30},220 ${x+14},28 ${x-14},28`} fill="#E8900A" opacity="0.03" />
+                  </g>
+                ))}
+                {/* Shelving units */}
+                {[30, 200, 370].map(sx => (
+                  <g key={sx}>
+                    {/* Uprights */}
+                    <rect x={sx} y="40" width="6" height="180" fill="#2A2A2A" stroke="#333" strokeWidth="1" />
+                    <rect x={sx+120} y="40" width="6" height="180" fill="#2A2A2A" stroke="#333" strokeWidth="1" />
+                    {/* Shelves */}
+                    {[60,100,140,180].map(sy => (
+                      <rect key={sy} x={sx} y={sy} width="126" height="5" fill="#333" stroke="#444" strokeWidth="1" />
+                    ))}
+                    {/* Boxes on shelves */}
+                    {[65,105,145].map((sy, si) => (
+                      <g key={sy}>
+                        <rect x={sx+8} y={sy} width="30" height="30" rx="2" fill={si===0?"#2a2216":"#1e2a1e"} stroke="#444" strokeWidth="1" />
+                        <rect x={sx+44} y={sy} width="22" height="30" rx="2" fill="#222" stroke="#333" strokeWidth="1" />
+                        <rect x={sx+72} y={sy+8} width="40" height="22" rx="2" fill={si===1?"#2a2216":"#1e1e2a"} stroke="#444" strokeWidth="1" />
+                      </g>
+                    ))}
+                  </g>
+                ))}
+                {/* Forklift silhouette */}
+                <g transform="translate(490,140)">
+                  <rect x="0" y="40" width="70" height="40" rx="3" fill="#1C1C1C" stroke="#333" strokeWidth="1.5" />
+                  <rect x="50" y="10" width="20" height="70" rx="2" fill="#222" stroke="#333" strokeWidth="1" />
+                  <rect x="15" y="75" width="45" height="6" fill="#333" />
+                  <rect x="52" y="20" width="6" height="50" fill="#E8900A" opacity="0.5" />
+                  <rect x="60" y="20" width="6" height="50" fill="#E8900A" opacity="0.5" />
+                  <circle cx="15" cy="82" r="10" fill="#222" stroke="#444" strokeWidth="1.5" />
+                  <circle cx="55" cy="82" r="10" fill="#222" stroke="#444" strokeWidth="1.5" />
+                  <circle cx="15" cy="82" r="4" fill="#333" />
+                  <circle cx="55" cy="82" r="4" fill="#333" />
+                </g>
+                {/* Orange accent strip at bottom */}
+                <rect x="0" y="218" width="600" height="3" fill="#E8900A" opacity="0.6" />
+              </svg>
+              <div className="absolute bottom-0 left-0 right-0 px-4 py-3" style={{ background: "rgba(10,10,10,0.92)" }}>
+                <p className="text-text-primary text-sm font-semibold font-condensed">Thousands of parts ready to ship</p>
               </div>
             </div>
+
+            {/* Logo/brand placeholder */}
             <div
               className="relative rounded-lg overflow-hidden"
-              style={{ border: "2px solid #333", minHeight: "260px", background: "#1C1C1C" }}
+              style={{ border: "2px solid #333", minHeight: "260px", background: "#111" }}
             >
-              <div className="w-full h-64 flex items-center justify-center" style={{ background: "#111" }}>
-                <Image
-                  src="/logo-icon.png"
-                  alt="A&B Supply & Surplus"
-                  width={220}
-                  height={220}
-                  className="object-contain"
-                />
-              </div>
-              <div className="absolute bottom-0 left-0 right-0 px-4 py-3 bg-bg-deep/90">
-                <p className="text-text-primary text-sm font-semibold font-condensed">
-                  Industrial surplus specialists
-                </p>
+              <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" className="w-full h-64" aria-hidden="true">
+                {/* Dark bg with subtle texture */}
+                <rect width="600" height="300" fill="#111" />
+                {[0,1,2,3,4,5,6,7,8,9].map(i =>
+                  [0,1,2,3,4,5,6,7,8,9].map(j => (
+                    <circle key={`${i}-${j}`} cx={30+i*60} cy={15+j*35} r="1" fill="#E8900A" opacity="0.07" />
+                  ))
+                )}
+                {/* Outer gear ring */}
+                <circle cx="300" cy="145" r="105" fill="none" stroke="#2A2A2A" strokeWidth="18" />
+                <circle cx="300" cy="145" r="105" fill="none" stroke="#E8900A" strokeWidth="2" opacity="0.4" />
+                {/* Gear teeth */}
+                {Array.from({length: 16}).map((_,i) => {
+                  const angle = (i * 360/16) * Math.PI/180;
+                  const x1 = 300 + Math.cos(angle)*96;
+                  const y1 = 145 + Math.sin(angle)*96;
+                  const x2 = 300 + Math.cos(angle)*118;
+                  const y2 = 145 + Math.sin(angle)*118;
+                  return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#E8900A" strokeWidth="8" strokeLinecap="round" opacity="0.5" />;
+                })}
+                {/* Inner circle */}
+                <circle cx="300" cy="145" r="82" fill="#1C1C1C" stroke="#333" strokeWidth="2" />
+                {/* A&B text */}
+                <text x="300" y="130" textAnchor="middle" fill="#E8900A" fontSize="52" fontFamily="Impact, sans-serif" fontWeight="bold" letterSpacing="4">A&amp;B</text>
+                {/* Banner */}
+                <rect x="195" y="148" width="210" height="32" rx="4" fill="#E8900A" />
+                <text x="300" y="170" textAnchor="middle" fill="#111" fontSize="14" fontFamily="Impact, sans-serif" fontWeight="bold" letterSpacing="2">SUPPLY &amp; SURPLUS</text>
+                {/* Corner accents */}
+                <line x1="30" y1="30" x2="80" y2="30" stroke="#E8900A" strokeWidth="2" opacity="0.4" />
+                <line x1="30" y1="30" x2="30" y2="80" stroke="#E8900A" strokeWidth="2" opacity="0.4" />
+                <line x1="570" y1="270" x2="520" y2="270" stroke="#E8900A" strokeWidth="2" opacity="0.4" />
+                <line x1="570" y1="270" x2="570" y2="220" stroke="#E8900A" strokeWidth="2" opacity="0.4" />
+              </svg>
+              <div className="absolute bottom-0 left-0 right-0 px-4 py-3" style={{ background: "rgba(10,10,10,0.92)" }}>
+                <p className="text-text-primary text-sm font-semibold font-condensed">Industrial surplus specialists</p>
               </div>
             </div>
           </div>
