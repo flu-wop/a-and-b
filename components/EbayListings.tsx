@@ -30,8 +30,12 @@ export default function EbayListings() {
     fetch("/api/ebay-listings")
       .then((r) => r.json())
       .then((data) => {
+        console.log("eBay API response:", JSON.stringify(data).slice(0, 500));
         const resp = data?.findItemsIneBayStoresResponse?.[0];
-        if (resp?.ack?.[0] !== "Success") throw new Error("API error");
+        if (resp?.ack?.[0] !== "Success") {
+          console.error("eBay ack failed:", resp?.ack?.[0], resp?.errorMessage);
+          throw new Error("API error");
+        }
         const raw = resp?.searchResult?.[0]?.item ?? [];
         const parsed: Listing[] = raw.map((item: Record<string, unknown[]>) => ({
           itemId: (item.itemId as string[])[0],

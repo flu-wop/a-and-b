@@ -20,6 +20,8 @@ export async function GET() {
   try {
     const res = await fetch(url, { next: { revalidate: 3600 } });
     const data = await res.json();
+    console.log("eBay server response status:", res.status);
+    console.log("eBay server response:", JSON.stringify(data).slice(0, 300));
     return NextResponse.json(data);
   } catch {
     return NextResponse.json({ error: "Failed to fetch" }, { status: 500 });
