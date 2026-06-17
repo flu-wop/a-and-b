@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-const APP_ID = "BryanArf-AampBSup-PRD-5a92c9933-d733c707";
-const STORE_NAME = "atob";
 const COUNT = 6;
 
 interface Listing {
@@ -29,19 +27,7 @@ export default function EbayListings() {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    const url =
-      `https://svcs.ebay.com/services/search/FindingService/v1` +
-      `?OPERATION-NAME=findItemsIneBayStores` +
-      `&SERVICE-VERSION=1.0.0` +
-      `&SECURITY-APPNAME=${APP_ID}` +
-      `&RESPONSE-DATA-FORMAT=JSON` +
-      `&storeName=${STORE_NAME}` +
-      `&paginationInput.entriesPerPage=${COUNT}` +
-      `&sortOrder=BestMatch` +
-      `&outputSelector(0)=PictureURLSuperSize` +
-      `&outputSelector(1)=ConditionWithDetails`;
-
-    fetch(url)
+    fetch("/api/ebay-listings")
       .then((r) => r.json())
       .then((data) => {
         const resp = data?.findItemsIneBayStoresResponse?.[0];
