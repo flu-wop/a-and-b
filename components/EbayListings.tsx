@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 const COUNT = 6;
+const RSS_URL = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent("https://www.ebay.com/str/atob?_rss=1")}&count=${COUNT}`;
 
 interface Listing {
   itemId: string;
@@ -27,30 +28,33 @@ export default function EbayListings() {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    fetch("/api/ebay-listings")
+    fetch(RSS_URL)
       .then((r) => r.json())
       .then((data) => {
-        console.log("eBay API response:", JSON.stringify(data).slice(0, 500));
-        const resp = data?.findItemsIneBayStoresResponse?.[0];
-        if (resp?.ack?.[0] !== "Success") {
-          console.error("eBay ack failed:", resp?.ack?.[0], resp?.errorMessage);
-          throw new Error("API error");
-        }
-        const raw = resp?.searchResult?.[0]?.item ?? [];
-        const parsed: Listing[] = raw.map((item: Record<string, unknown[]>) => ({
-          itemId: (item.itemId as string[])[0],
-          title: (item.title as string[])[0],
-          price: (item.sellingStatus as Record<string, unknown[]>[])[0]?.currentPrice?.[0] as string,
-          imageUrl:
-            ((item.pictureURLSuperSize as string[] | undefined)?.[0]) ||
-            ((item.galleryURL as string[] | undefined)?.[0]) ||
-            "",
-          viewItemURL: (item.viewItemURL as string[])[0],
-          condition: ((item.condition as Record<string, string[]>[] | undefined)?.[0]?.conditionDisplayName?.[0]) ?? "Surplus",
-        }));
+        console.log("RSS response:", JSON.stringify(data).slice(0, 400));
+        if (data.status !== "ok") throw new Error("RSS error");
+        const items = data.items ?? [];
+        const parsed: Listing[] = items.slice(0, COUNT).map((item: Record<string, string>) => {
+          // Extract image from description HTML
+          const imgMatch = item.description?.match(/<img[^>]+src="([^"]+)"/);
+          const imageUrl = imgMatch?.[1] ?? "";
+          // Extract price from title e.g. "$123.45"
+          const priceMatch = item.title?.match(/\$[\d,]+\.?\d*/);
+          const price = priceMatch?.[0] ?? "";
+          // Strip price from title if present
+          const title = item.title?.replace(/\s*[-–]\s*\$[\d,]+\.?\d*/, "").trim() ?? "";
+          return {
+            itemId: item.guid ?? item.link,
+            title,
+            price,
+            imageUrl: imageUrl.replace(/\$_\d+\.JPG/, "$_300.JPG"), // get decent size
+            viewItemURL: item.link,
+            condition: "Surplus",
+          };
+        });
         setListings(parsed);
       })
-      .catch(() => setError(true))
+      .catch((e) => { console.error("RSS fetch error:", e); setError(true); })
       .finally(() => setLoading(false));
   }, []);
 
@@ -82,10 +86,6 @@ export default function EbayListings() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {listings.map((item) => {
-              const priceVal =
-                typeof item.price === "object"
-                  ? parseFloat((item.price as unknown as Record<string, string>).__value__ ?? "0")
-                  : parseFloat(String(item.price));
               return (
                 <a
                   key={item.itemId}
@@ -138,7 +138,7 @@ export default function EbayListings() {
                     </p>
                     <div className="mt-auto pt-4 flex items-center justify-between">
                       <span className="text-orange-bright font-display text-2xl">
-                        ${isNaN(priceVal) ? "—" : priceVal.toFixed(2)}
+                        {item.price || "—"}
                       </span>
                       <span className="flex items-center gap-1 text-xs text-orange font-condensed font-semibold tracking-wider uppercase opacity-0 group-hover:opacity-100 transition-opacity">
                         View on eBay <ArrowIcon className="w-3 h-3" />
