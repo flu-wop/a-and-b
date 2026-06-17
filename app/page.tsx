@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import EbayListings from "@/components/EbayListings";
 
 export const metadata: Metadata = {
   title: "A&B Supply & Surplus | Industrial Surplus & Heavy Equipment Parts",
@@ -183,44 +184,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── LISTING VIGNETTE ──────────────────────────────────────────────── */}
-      <section className="py-8 px-4">
-        <div className="max-w-2xl mx-auto">
-          <p className="eyebrow text-center mb-5">Live on eBay Now</p>
-          <div className="bg-bg-card border border-[#333] rounded-lg overflow-hidden">
-            {/* Mini eBay listing cards */}
-            {[
-              { title: "Hydraulic Cylinder — 4\" Bore × 24\" Stroke", condition: "Used — Tested", price: "$189.00", status: "Ships Today" },
-              { title: "Allen-Bradley MicroLogix 1100 PLC 1763-L16BWA", condition: "New Old Stock", price: "$342.00", status: "3 Available" },
-              { title: "Excavator Quick Coupler — CAT 308 / 311 Class", condition: "Used — Good", price: "$415.00", status: "Ships Today" },
-            ].map((item, i) => (
-              <div
-                key={i}
-                className={`flex items-center justify-between gap-4 px-5 py-4 ${i < 2 ? "border-b border-[#2A2A2A]" : ""}`}
-              >
-                <div className="flex-1 min-w-0">
-                  <p className="text-text-primary text-sm font-semibold truncate font-condensed">{item.title}</p>
-                  <p className="text-text-dim text-xs mt-0.5">{item.condition}</p>
-                </div>
-                <div className="text-right shrink-0">
-                  <p className="text-orange-bright font-bold text-sm font-condensed">{item.price}</p>
-                  <p className="text-xs text-green-400 mt-0.5">{item.status}</p>
-                </div>
-              </div>
-            ))}
-            <div className="px-5 py-3 bg-bg-raised border-t border-[#333] text-center">
-              <a
-                href="https://www.ebay.com/str/atob"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-text-muted hover:text-orange transition-colors font-condensed tracking-wider uppercase"
-              >
-                View all 400+ listings on eBay →
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* ── EBAY LIVE LISTINGS ────────────────────────────────────────────── */}
+      <EbayListings />
 
       {/* ── FAMILY SECTION ────────────────────────────────────────────────── */}
       <section
