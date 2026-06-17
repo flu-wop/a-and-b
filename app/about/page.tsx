@@ -180,13 +180,15 @@ export default function AboutPage() {
               className="relative rounded-lg overflow-hidden"
               style={{ border: "2px solid #333", minHeight: "260px", background: "#1C1C1C" }}
             >
-              <Image
-                src="/logo-banner.png"
-                alt="A&B Supply & Surplus"
-                width={700}
-                height={400}
-                className="w-full h-64 object-cover object-center"
-              />
+              <div className="w-full h-64 flex items-center justify-center" style={{ background: "#111" }}>
+                <Image
+                  src="/logo-icon.png"
+                  alt="A&B Supply & Surplus"
+                  width={220}
+                  height={220}
+                  className="object-contain"
+                />
+              </div>
               <div className="absolute bottom-0 left-0 right-0 px-4 py-3 bg-bg-deep/90">
                 <p className="text-text-primary text-sm font-semibold font-condensed">
                   Industrial surplus specialists
