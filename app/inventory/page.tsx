@@ -6,121 +6,15 @@ export const metadata: Metadata = {
     "Browse A&B Supply & Surplus inventory: heavy equipment parts, hydraulics, electrical, CNC/metalworking, hardware and more.",
 };
 
-// These IDs and names must always match the live eBay Store Categories exactly
-// (Seller Hub → Store → Categories). If a category is renamed or added/removed
-// there, update it here too, or this list drifts out of sync again.
+// These match the LIVE storefront nav exactly (fetched from ebay.com/str/atob).
+// The store's "Category preference" is set to eBay's standard categories, not
+// custom Store Categories — so links MUST use _sacat, not LH_StoreCategory.
+// If Bryan ever switches Seller Hub to "Store categories" display mode, this
+// whole list needs to be rebuilt against whatever the storefront shows then.
 const CATEGORIES = [
   {
-    id: "hydraulics",
-    title: "Hydraulics",
-    tagline: "The power behind the machine",
-    description:
-      "From surplus hydraulic cylinders and pump units to valves, hoses, fittings, and manifolds — we source quality hydraulic components for industrial and construction applications. Many items are new-old-stock (NOS) or professionally rebuilt.",
-    examples: [
-      "Hydraulic cylinders",
-      "Pumps & motors",
-      "Directional control valves",
-      "Hoses & fittings",
-      "Hydraulic manifolds",
-      "Power units (HPU)",
-    ],
-    storeCategoryId: "45625601016",
-    ebayUrl: "https://www.ebay.com/sch/i.html?_ssn=atob&LH_StoreCategory=45625601016",
-    Illustration: HydraulicsIllustration,
-  },
-  {
-    id: "heavy-equipment",
-    title: "Heavy Equipment Parts",
-    tagline: "Keep your machines running",
-    description:
-      "We stock a wide range of heavy equipment parts including buckets, quick couplers, cutting edges, pins, bushings, ground engagement tools, and various attachments for excavators, wheel loaders, skid steers, bulldozers, and more.",
-    examples: [
-      "Excavator buckets & thumbs",
-      "Quick couplers & pins",
-      "Cutting edges & wear plates",
-      "Undercarriage parts",
-      "Counterweights & ballast",
-      "Attachment components",
-    ],
-    storeCategoryId: "45625602016",
-    ebayUrl: "https://www.ebay.com/sch/i.html?_ssn=atob&LH_StoreCategory=45625602016",
-    Illustration: HeavyEquipmentIllustration,
-  },
-  {
-    id: "plc-automation",
-    title: "PLC & Automation",
-    tagline: "Programmable controls, tested and ready",
-    description:
-      "Surplus PLCs, I/O modules, HMIs, and automation controllers pulled from decommissioned lines and tested before listing.",
-    examples: [
-      "PLCs & I/O modules",
-      "HMI touchscreens",
-      "Automation controllers",
-      "Communication modules",
-      "Programming cables",
-      "Rack & backplane hardware",
-    ],
-    storeCategoryId: "45625603016",
-    ebayUrl: "https://www.ebay.com/sch/i.html?_ssn=atob&LH_StoreCategory=45625603016",
-    Illustration: ElectricalIllustration,
-  },
-  {
-    id: "valves-pneumatics",
-    title: "Valves & Pneumatics",
-    tagline: "Flow and air control components",
-    description:
-      "Pneumatic cylinders, solenoid valves, directional control valves, and fittings for industrial air systems.",
-    examples: [
-      "Solenoid valves",
-      "Directional control valves",
-      "Pneumatic cylinders",
-      "Air fittings & manifolds",
-      "Regulators & filters",
-      "Check & relief valves",
-    ],
-    storeCategoryId: "45625604016",
-    ebayUrl: "https://www.ebay.com/sch/i.html?_ssn=atob&LH_StoreCategory=45625604016",
-    Illustration: HydraulicsIllustration,
-  },
-  {
-    id: "bearings-power-transmission",
-    title: "Bearings & Power Transmission",
-    tagline: "Keeping things turning",
-    description:
-      "Bearings, pillow blocks, couplings, sprockets, and chain for industrial power transmission applications.",
-    examples: [
-      "Ball & roller bearings",
-      "Pillow block bearings",
-      "Couplings",
-      "Chain & sprockets",
-      "Belts & pulleys",
-      "Gearboxes",
-    ],
-    storeCategoryId: "45625605016",
-    ebayUrl: "https://www.ebay.com/sch/i.html?_ssn=atob&LH_StoreCategory=45625605016",
-    Illustration: SurplusIllustration,
-  },
-  {
-    id: "sensors-instrumentation",
-    title: "Sensors & Instrumentation",
-    tagline: "Precision feedback and measurement",
-    description:
-      "Proximity sensors, photoeyes, pressure transmitters, and other instrumentation for process and automation systems.",
-    examples: [
-      "Proximity sensors",
-      "Photoeyes",
-      "Pressure transmitters",
-      "Flow indicators",
-      "Limit switches",
-      "Encoders",
-    ],
-    storeCategoryId: "45625606016",
-    ebayUrl: "https://www.ebay.com/sch/i.html?_ssn=atob&LH_StoreCategory=45625606016",
-    Illustration: CncIllustration,
-  },
-  {
-    id: "electrical-controls",
-    title: "Electrical & Controls",
+    id: "electrical-equipment-supplies",
+    title: "Electrical Equipment & Supplies",
     tagline: "Tested surplus electrical components",
     description:
       "Surplus and new-old-stock electrical components for industrial applications. Contactors, circuit breakers, motor starters, VFDs/drives, relays, and panel components.",
@@ -132,12 +26,113 @@ const CATEGORIES = [
       "Relays",
       "Panel components",
     ],
-    storeCategoryId: "45625607016",
-    ebayUrl: "https://www.ebay.com/sch/i.html?_ssn=atob&LH_StoreCategory=45625607016",
+    ebayUrl: "https://www.ebay.com/str/atob/Electrical-Equipment-Supplies/_i.html?_sacat=92074",
     Illustration: ElectricalIllustration,
   },
   {
-    id: "surplus-misc-industrial",
+    id: "industrial-automation-motion-controls",
+    title: "Industrial Automation & Motion Controls",
+    tagline: "Programmable controls, tested and ready",
+    description:
+      "Surplus PLCs, I/O modules, HMIs, sensors, and automation controllers pulled from decommissioned lines and tested before listing.",
+    examples: [
+      "PLCs & I/O modules",
+      "HMI touchscreens",
+      "Proximity & photoeye sensors",
+      "Automation controllers",
+      "Communication modules",
+      "Rack & backplane hardware",
+    ],
+    ebayUrl: "https://www.ebay.com/str/atob/Industrial-Automation-Motion-Controls/_i.html?_sacat=42892",
+    Illustration: CncIllustration,
+  },
+  {
+    id: "hydraulics-pneumatics-pumps-plumbing",
+    title: "Hydraulics, Pneumatics, Pumps & Plumbing",
+    tagline: "The power behind the machine",
+    description:
+      "From surplus hydraulic cylinders and pump units to pneumatic valves, hoses, fittings, and manifolds — quality fluid power components for industrial and construction applications.",
+    examples: [
+      "Hydraulic cylinders",
+      "Pumps & motors",
+      "Solenoid & directional control valves",
+      "Hoses & fittings",
+      "Pneumatic cylinders",
+      "Power units (HPU)",
+    ],
+    ebayUrl: "https://www.ebay.com/str/atob/Hydraulics-Pneumatics-Pumps-Plumbing/_i.html?_sacat=183978",
+    Illustration: HydraulicsIllustration,
+  },
+  {
+    id: "heavy-equipment-parts-attachments",
+    title: "Heavy Equipment, Parts & Attachments",
+    tagline: "Keep your machines running",
+    description:
+      "We stock a wide range of heavy equipment parts including buckets, quick couplers, cutting edges, pins, bushings, ground engagement tools, and various attachments for excavators, wheel loaders, skid steers, bulldozers, and more.",
+    examples: [
+      "Excavator buckets & thumbs",
+      "Quick couplers & pins",
+      "Cutting edges & wear plates",
+      "Undercarriage parts",
+      "Counterweights & ballast",
+      "Attachment components",
+    ],
+    ebayUrl: "https://www.ebay.com/str/atob/Heavy-Equipment-Parts-Attachments/_i.html?_sacat=257887",
+    Illustration: HeavyEquipmentIllustration,
+  },
+  {
+    id: "cnc-metalworking-manufacturing",
+    title: "CNC, Metalworking & Manufacturing",
+    tagline: "Precision tools & machine components",
+    description:
+      "Quality surplus CNC tooling, workholding, and machine components for machinists and job shops — tool holders, vises, chucks, and accessories at surplus prices.",
+    examples: [
+      "Tool holders & boring bars",
+      "Vises & clamps",
+      "Chucks & collets",
+      "Measuring tools & gauges",
+      "Cutting tools",
+      "Machine accessories",
+    ],
+    ebayUrl: "https://www.ebay.com/str/atob/CNC-Metalworking-Manufacturing/_i.html?_sacat=11804",
+    Illustration: CncIllustration,
+  },
+  {
+    id: "fasteners-hardware",
+    title: "Fasteners & Hardware",
+    tagline: "By the piece or by the pound",
+    description:
+      "Bulk and individual hardware: bolts, nuts, washers, anchor bolts, specialty fasteners, set screws, and more.",
+    examples: [
+      "Grade 5 & 8 bolts",
+      "Hex nuts & lock nuts",
+      "Specialty & metric fasteners",
+      "Anchor bolts",
+      "Set screws & socket head cap",
+      "Washers (flat, lock, fender)",
+    ],
+    ebayUrl: "https://www.ebay.com/str/atob/Fasteners-Hardware/_i.html?_sacat=183900",
+    Illustration: HardwareIllustration,
+  },
+  {
+    id: "test-measurement-inspection",
+    title: "Test, Measurement & Inspection",
+    tagline: "Precision feedback and measurement",
+    description:
+      "Proximity sensors, pressure transmitters, gauges, and other instrumentation for process and automation systems.",
+    examples: [
+      "Pressure transmitters",
+      "Flow indicators",
+      "Gauges",
+      "Limit switches",
+      "Encoders",
+      "Instrumentation cable",
+    ],
+    ebayUrl: "https://www.ebay.com/str/atob/Test-Measurement-Inspection/_i.html?_sacat=181939",
+    Illustration: SurplusIllustration,
+  },
+  {
+    id: "other-business-industrial",
     title: "Surplus & Misc Industrial",
     tagline: "Always something new in the warehouse",
     description:
@@ -147,11 +142,10 @@ const CATEGORIES = [
       "Material handling",
       "Shop equipment & supplies",
       "Safety gear",
-      "Hardware & fasteners",
+      "Bearings & power transmission",
       "Mixed lots",
     ],
-    storeCategoryId: "45625608016",
-    ebayUrl: "https://www.ebay.com/sch/i.html?_ssn=atob&LH_StoreCategory=45625608016",
+    ebayUrl: "https://www.ebay.com/str/atob/Other-Business-Industrial/_i.html?_sacat=26261",
     Illustration: HardwareIllustration,
   },
 ];
