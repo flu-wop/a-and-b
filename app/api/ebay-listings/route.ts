@@ -1,29 +1,82 @@
 import { NextResponse } from "next/server";
 
-const APP_ID = "BryanArf-AampBSup-PRD-5a92c9933-d733c707";
-const STORE_NAME = "atob";
+const CLIENT_ID = "BryanArf-AampBSup-PRD-5a92c9933-d733c707";
+const STORE_USERNAME = "arfsten19"; // seller account username the store runs under
 const COUNT = 6;
 
-export async function GET() {
-  const url =
-    `https://svcs.ebay.com/services/search/FindingService/v1` +
-    `?OPERATION-NAME=findItemsIneBayStores` +
-    `&SERVICE-VERSION=1.0.0` +
-    `&SECURITY-APPNAME=${APP_ID}` +
-    `&RESPONSE-DATA-FORMAT=JSON` +
-    `&storeName=${STORE_NAME}` +
-    `&paginationInput.entriesPerPage=${COUNT}` +
-    `&sortOrder=BestMatch` +
-    `&outputSelector(0)=PictureURLSuperSize` +
-    `&outputSelector(1)=ConditionWithDetails`;
+// The old Finding API (svcs.ebay.com) was fully decommissioned by eBay on
+// 2025-02-05. This route uses the replacement — the Browse API — which
+// requires an OAuth application access token via the client-credentials grant.
 
+let cachedToken: { value: string; expiresAt: number } | null = null;
+
+async function getAppAccessToken(): Promise<string> {
+  if (cachedToken && cachedToken.expiresAt > Date.now() + 60_000) {
+    return cachedToken.value;
+  }
+
+  const secret = process.env.EBAY_CLIENT_SECRET;
+  if (!secret) {
+    throw new Error("EBAY_CLIENT_SECRET is not set in environment variables");
+  }
+
+  const basicAuth = Buffer.from(`${CLIENT_ID}:${secret}`).toString("base64");
+
+  const res = await fetch("https://api.ebay.com/identity/v1/oauth2/token", {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${basicAuth}`,
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: new URLSearchParams({
+      grant_type: "client_credentials",
+      scope: "https://api.ebay.com/oauth/api_scope",
+    }),
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`eBay OAuth token request failed (${res.status}): ${text}`);
+  }
+
+  const data = await res.json();
+  cachedToken = {
+    value: data.access_token,
+    expiresAt: Date.now() + data.expires_in * 1000,
+  };
+  return cachedToken.value;
+}
+
+export async function GET() {
   try {
-    const res = await fetch(url, { next: { revalidate: 3600 } });
+    const token = await getAppAccessToken();
+
+    const url =
+      `https://api.ebay.com/buy/browse/v1/item_summary/search` +
+      `?filter=sellers:{${STORE_USERNAME}}` +
+      `&sort=newlyListed` +
+      `&limit=${COUNT}`;
+
+    const res = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "X-EBAY-C-MARKETPLACE-ID": "EBAY_US",
+        "Content-Type": "application/json",
+      },
+      next: { revalidate: 3600 },
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      return NextResponse.json(
+        { error: `eBay Browse API error (${res.status}): ${text}` },
+        { status: 502 }
+      );
+    }
+
     const data = await res.json();
-    console.log("eBay server response status:", res.status);
-    console.log("eBay server response:", JSON.stringify(data).slice(0, 300));
     return NextResponse.json(data);
-  } catch {
-    return NextResponse.json({ error: "Failed to fetch" }, { status: 500 });
+  } catch (err) {
+    return NextResponse.json({ error: (err as Error).message }, { status: 500 });
   }
 }
