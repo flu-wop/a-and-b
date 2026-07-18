@@ -52,12 +52,15 @@ export async function GET() {
     const token = await getAppAccessToken();
 
     // Browse API requires one of q/category_ids/epid/gtin even when filtering
-    // by seller. category_ids=0 (root category) is the documented workaround
-    // that returns items from anywhere in the seller's store.
+    // by seller. Rather than relying on the undocumented "category_ids=0" trick
+    // (reported by other developers as unreliable/unsupported), we scope to the
+    // real "Business & Industrial" category (12576) — every item this store
+    // sells falls under it, so this is a safe, documented, stable filter.
+    const BUSINESS_INDUSTRIAL_CATEGORY = "12576";
     const url =
       `https://api.ebay.com/buy/browse/v1/item_summary/search` +
-      `?filter=sellers:{${STORE_USERNAME}}` +
-      `&category_ids=0` +
+      `?category_ids=${BUSINESS_INDUSTRIAL_CATEGORY}` +
+      `&filter=sellers:{${STORE_USERNAME}}` +
       `&sort=newlyListed` +
       `&limit=${COUNT}`;
 
