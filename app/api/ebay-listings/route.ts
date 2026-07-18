@@ -51,9 +51,13 @@ export async function GET() {
   try {
     const token = await getAppAccessToken();
 
+    // Browse API requires one of q/category_ids/epid/gtin even when filtering
+    // by seller. category_ids=0 (root category) is the documented workaround
+    // that returns items from anywhere in the seller's store.
     const url =
       `https://api.ebay.com/buy/browse/v1/item_summary/search` +
       `?filter=sellers:{${STORE_USERNAME}}` +
+      `&category_ids=0` +
       `&sort=newlyListed` +
       `&limit=${COUNT}`;
 
