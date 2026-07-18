@@ -3,8 +3,9 @@ import { isAdmin, AdminLocked } from "@/lib/admin-auth";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminProducts({ searchParams }: { searchParams: { key?: string } }) {
-  if (!isAdmin(searchParams)) return <AdminLocked />;
+export default async function AdminProducts({ searchParams }: { searchParams: Promise<{ key?: string }> }) {
+  const resolvedParams = await searchParams;
+  if (!isAdmin(resolvedParams)) return <AdminLocked />;
 
   await initDb();
   const db = getDb();

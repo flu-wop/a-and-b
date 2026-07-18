@@ -3,6 +3,13 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
+// This must always point to wherever the site is actually live. It was
+// hardcoded to absupplysurplus.com before that domain was ever connected to
+// this Vercel project — meaning link previews (texts, social shares) pointed
+// to a domain that didn't resolve to the site. Pull from the same env var
+// Stripe redirects use, with the working Vercel URL as a safe fallback.
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://a-and-b.vercel.app";
+
 export const metadata: Metadata = {
   title: {
     default: "A&B Supply & Surplus | Industrial Surplus & Heavy Equipment Parts",
@@ -23,7 +30,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "A&B Supply & Surplus",
     description: "Industrial Surplus & Heavy Equipment Parts – Family-Owned & Trusted",
-    url: "https://www.absupplysurplus.com",
+    url: SITE_URL,
     siteName: "A&B Supply & Surplus",
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "A&B Supply & Surplus" }],
     locale: "en_US",
@@ -33,7 +40,7 @@ export const metadata: Metadata = {
     icon: "/favicon.ico",
     apple: "/apple-touch-icon.png",
   },
-  metadataBase: new URL("https://www.absupplysurplus.com"),
+  metadataBase: new URL(SITE_URL),
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

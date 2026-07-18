@@ -2,8 +2,9 @@ import { isAdmin, AdminLocked } from "@/lib/admin-auth";
 
 export const dynamic = "force-dynamic";
 
-export default function AdminAuctionScout({ searchParams }: { searchParams: { key?: string } }) {
-  if (!isAdmin(searchParams)) return <AdminLocked />;
+export default async function AdminAuctionScout({ searchParams }: { searchParams: Promise<{ key?: string }> }) {
+  const resolvedParams = await searchParams;
+  if (!isAdmin(resolvedParams)) return <AdminLocked />;
 
   return (
     <main style={{ padding: 40, fontFamily: "system-ui", color: "#F5EDD8", background: "#0d0d0d", minHeight: "100vh" }}>
