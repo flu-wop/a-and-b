@@ -1,5 +1,6 @@
 import { getDb, initDb } from "@/lib/db";
 import { isAdmin, AdminLocked } from "@/lib/admin-auth";
+import SyncButton from "./SyncButton";
 
 export const dynamic = "force-dynamic";
 
@@ -14,9 +15,11 @@ export default async function AdminProducts({ searchParams }: { searchParams: Pr
   return (
     <main style={{ padding: 40, fontFamily: "system-ui", color: "#F5EDD8", background: "#0d0d0d", minHeight: "100vh" }}>
       <h1 style={{ color: "#D97706" }}>Products ({rows.length})</h1>
-      <p style={{ color: "#A89880", marginBottom: 24 }}>
-        Site catalog. To add items in bulk, use the import script — this view is for spot checks and status changes.
+      <p style={{ color: "#A89880", marginBottom: 16 }}>
+        Auto-synced from eBay every night, or trigger it manually below. SKU shown is the eBay item ID —
+        the public API can't see your internal custom label, only Bryan's own seller login can.
       </p>
+      <SyncButton adminKey={resolvedParams.key!} />
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
           <tr style={{ textAlign: "left", color: "#A89880", borderBottom: "1px solid #333" }}>

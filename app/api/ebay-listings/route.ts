@@ -1,70 +1,25 @@
 import { NextResponse } from "next/server";
+import { getEbayAppAccessToken, EBAY_STORE_USERNAME, EBAY_BUSINESS_INDUSTRIAL_CATEGORY } from "@/lib/ebay";
 
-const CLIENT_ID = "BryanArf-AampBSup-PRD-5a92c9933-d733c707";
-const STORE_USERNAME = "arfsten19"; // seller account username the store runs under
 const COUNT = 6;
-
-// The old Finding API (svcs.ebay.com) was fully decommissioned by eBay on
-// 2025-02-05. This route uses the replacement — the Browse API — which
-// requires an OAuth application access token via the client-credentials grant.
-
-let cachedToken: { value: string; expiresAt: number } | null = null;
-
-async function getAppAccessToken(): Promise<string> {
-  if (cachedToken && cachedToken.expiresAt > Date.now() + 60_000) {
-    return cachedToken.value;
-  }
-
-  const secret = process.env.EBAY_CLIENT_SECRET;
-  if (!secret) {
-    throw new Error("EBAY_CLIENT_SECRET is not set in environment variables");
-  }
-
-  const basicAuth = Buffer.from(`${CLIENT_ID}:${secret}`).toString("base64");
-
-  const res = await fetch("https://api.ebay.com/identity/v1/oauth2/token", {
-    method: "POST",
-    headers: {
-      Authorization: `Basic ${basicAuth}`,
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: new URLSearchParams({
-      grant_type: "client_credentials",
-      scope: "https://api.ebay.com/oauth/api_scope",
-    }),
-  });
-
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`eBay OAuth token request failed (${res.status}): ${text}`);
-  }
-
-  const data = await res.json();
-  cachedToken = {
-    value: data.access_token,
-    expiresAt: Date.now() + data.expires_in * 1000,
-  };
-  return cachedToken.value;
-}
 
 export async function GET() {
   try {
-    const token = await getAppAccessToken();
+    const token = await getEbayAppAccessToken();
 
     // Browse API requires one of q/category_ids/epid/gtin even when filtering
     // by seller. Rather than relying on the undocumented "category_ids=0" trick
     // (reported by other developers as unreliable/unsupported), we scope to the
-    // real "Business & Industrial" category (12576) — every item this store
-    // sells falls under it, so this is a safe, documented, stable filter.
+    // real "Business & Industrial" category — every item this store sells
+    // falls under it, so this is a safe, documented, stable filter.
     //
     // IMPORTANT: the sellers filter value uses curly braces, e.g. sellers:{username}.
     // Those braces MUST be percent-encoded or fetch/undici mangles the query
     // string silently (the filter param gets dropped entirely rather than erroring
     // loudly) — hence URLSearchParams here instead of raw template-string concat.
-    const BUSINESS_INDUSTRIAL_CATEGORY = "12576";
     const params = new URLSearchParams({
-      category_ids: BUSINESS_INDUSTRIAL_CATEGORY,
-      filter: `sellers:{${STORE_USERNAME}}`,
+      category_ids: EBAY_BUSINESS_INDUSTRIAL_CATEGORY,
+      filter: `sellers:{${EBAY_STORE_USERNAME}}`,
       sort: "newlyListed",
       limit: String(COUNT),
     });
