@@ -18,6 +18,15 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
   }
 
+  if (!process.env.STRIPE_SECRET_KEY) {
+    // Fails loudly and clearly rather than letting `new Stripe(undefined)`
+    // throw an unhandled exception that surfaces as a generic 500/crash page.
+    return NextResponse.json(
+      { error: "STRIPE_NOT_CONFIGURED: checkout isn't set up yet" },
+      { status: 503 }
+    );
+  }
+
   await initDb();
   const db = getDb();
 
