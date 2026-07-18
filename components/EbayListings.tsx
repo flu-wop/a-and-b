@@ -86,22 +86,19 @@ export default function EbayListings() {
   const [live, setLive] = useState(false);
 
   useEffect(() => {
-    // Try rss2json — if it works, swap in real listings
-    const url = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent("https://www.ebay.com/str/atob?_rss=1")}&count=${COUNT}`;
-    fetch(url)
+    fetch("/api/ebay-listings")
       .then((r) => r.json())
       .then((data) => {
-        if (data.status !== "ok") return;
-        const items = data.items ?? [];
+        const items = data.itemSummaries ?? [];
         if (items.length === 0) return;
-        const parsed: Listing[] = items.slice(0, COUNT).map((item: Record<string, string>) => {
-          const imgMatch = item.description?.match(/<img[^>]+src="([^"]+)"/);
-          const imageUrl = (imgMatch?.[1] ?? "").replace(/\$_\d+\.JPG/, "$_300.JPG");
-          const priceMatch = item.title?.match(/\$[\d,]+\.?\d*/);
-          const price = priceMatch?.[0] ?? "";
-          const title = item.title?.replace(/\s*[-–]\s*\$[\d,]+\.?\d*/, "").trim() ?? "";
-          return { itemId: item.guid ?? item.link, title, price, imageUrl, viewItemURL: item.link, condition: "Surplus" };
-        });
+        const parsed: Listing[] = items.slice(0, COUNT).map((item: any) => ({
+          itemId: item.itemId,
+          title: item.title ?? "",
+          price: item.price?.value ? `$${Number(item.price.value).toFixed(2)}` : "",
+          imageUrl: item.image?.imageUrl ?? item.thumbnailImages?.[0]?.imageUrl ?? "",
+          viewItemURL: item.itemWebUrl ?? "https://www.ebay.com/str/atob",
+          condition: item.condition ?? "Surplus",
+        }));
         setListings(parsed);
         setLive(true);
       })
