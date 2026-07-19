@@ -39,6 +39,11 @@ export async function initDb() {
   `);
 
   await db.execute(`
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_products_ebay_item_id
+    ON products(ebay_item_id) WHERE ebay_item_id IS NOT NULL
+  `);
+
+  await db.execute(`
     CREATE TABLE IF NOT EXISTS orders (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       customer_name TEXT NOT NULL,

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { syncProductsFromEbay } from "@/lib/sync-products";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+export const maxDuration = 300;
 
 function isAuthed(req: Request): boolean {
   const key = new URL(req.url).searchParams.get("key");

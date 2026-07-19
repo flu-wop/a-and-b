@@ -3,6 +3,7 @@ import { getDb, initDb } from "@/lib/db";
 
 export interface SyncResult {
   total: number;
+  synced: number;
   created: number;
   updated: number;
   archived: number;
@@ -15,10 +16,12 @@ export async function syncProductsFromEbay(): Promise<SyncResult> {
 
   const items = await fetchAllSellerItems();
 
-  let created = 0;
-  let updated = 0;
+  const beforeCountRes = await db.execute(`SELECT COUNT(*) as c FROM products`);
+  const beforeCount = Number((beforeCountRes.rows[0] as any).c);
+
   let failed = 0;
   const seenEbayIds: string[] = [];
+  const statements: { sql: string; args: any[] }[] = [];
 
   for (const item of items) {
     const ebayItemId = item.itemId;
@@ -36,31 +39,32 @@ export async function syncProductsFromEbay(): Promise<SyncResult> {
     }
     seenEbayIds.push(ebayItemId);
 
-    try {
-      const existing = await db.execute({
-        sql: `SELECT id FROM products WHERE ebay_item_id = ?`,
-        args: [ebayItemId],
-      });
+    // Single upsert per item instead of a SELECT-then-INSERT/UPDATE pair —
+    // the original version did ~1,800 sequential round trips for 916 items
+    // and blew past the function's time limit. This plus db.batch() below
+    // sends everything in one shot.
+    statements.push({
+      sql: `
+        INSERT INTO products (sku, ebay_item_id, title, price_cents, quantity, condition, image_url, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, 'active')
+        ON CONFLICT(ebay_item_id) DO UPDATE SET
+          title = excluded.title,
+          price_cents = excluded.price_cents,
+          quantity = excluded.quantity,
+          condition = excluded.condition,
+          image_url = excluded.image_url,
+          status = 'active',
+          updated_at = datetime('now')
+      `,
+      args: [ebayItemId, ebayItemId, title, priceCents, quantity, condition, imageUrl],
+    });
+  }
 
-      if (existing.rows.length > 0) {
-        await db.execute({
-          sql: `UPDATE products SET title = ?, price_cents = ?, quantity = ?, condition = ?, image_url = ?, status = 'active', updated_at = datetime('now') WHERE ebay_item_id = ?`,
-          args: [title, priceCents, quantity, condition, imageUrl, ebayItemId],
-        });
-        updated++;
-      } else {
-        // No true custom SKU available from the public API — use the eBay
-        // item ID as the sku value so it still satisfies the unique/not-null
-        // constraint and is traceable back to the source listing.
-        await db.execute({
-          sql: `INSERT INTO products (sku, ebay_item_id, title, price_cents, quantity, condition, image_url, status) VALUES (?, ?, ?, ?, ?, ?, ?, 'active')`,
-          args: [ebayItemId, ebayItemId, title, priceCents, quantity, condition, imageUrl],
-        });
-        created++;
-      }
-    } catch {
-      failed++;
-    }
+  if (statements.length > 0) {
+    await db.batch(
+      statements.map((s) => ({ sql: s.sql, args: s.args })),
+      "write"
+    );
   }
 
   // Anything previously synced but no longer in the live eBay results has
@@ -76,5 +80,11 @@ export async function syncProductsFromEbay(): Promise<SyncResult> {
     archived = Number(result.rowsAffected ?? 0);
   }
 
-  return { total: items.length, created, updated, archived, failed };
+  const afterCountRes = await db.execute(`SELECT COUNT(*) as c FROM products`);
+  const afterCount = Number((afterCountRes.rows[0] as any).c);
+  const created = Math.max(0, afterCount - beforeCount);
+  const synced = statements.length;
+  const updated = Math.max(0, synced - created);
+
+  return { total: items.length, synced, created, updated, archived, failed };
 }

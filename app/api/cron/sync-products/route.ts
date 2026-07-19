@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { syncProductsFromEbay } from "@/lib/sync-products";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+export const maxDuration = 300;
 
 // Vercel Cron automatically sends `Authorization: Bearer ${CRON_SECRET}` for
 // scheduled invocations when CRON_SECRET is set in env vars — this rejects
