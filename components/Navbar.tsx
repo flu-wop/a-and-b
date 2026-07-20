@@ -7,7 +7,7 @@ import { useCart } from "@/lib/cart-context";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
-  { href: "/shop", label: "Shop Direct" },
+  { href: "https://www.ebay.com/str/atob", label: "Shop on eBay", external: true },
   { href: "/about", label: "About Us" },
   { href: "/contact", label: "Contact" },
 ];
@@ -50,11 +50,17 @@ export default function Navbar() {
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-8" aria-label="Main navigation">
-            {NAV_LINKS.map((link) => (
-              <Link key={link.href} href={link.href} className="nav-link">
-                {link.label}
-              </Link>
-            ))}
+            {NAV_LINKS.map((link) =>
+              link.external ? (
+                <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer" className="nav-link">
+                  {link.label}
+                </a>
+              ) : (
+                <Link key={link.href} href={link.href} className="nav-link">
+                  {link.label}
+                </Link>
+              )
+            )}
           </nav>
 
           {/* Desktop CTA */}
@@ -88,15 +94,13 @@ export default function Navbar() {
                 </span>
               )}
             </button>
-            <a
-              href="https://www.ebay.com/str/atob"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/shop"
               className="btn-orange"
               style={{ fontSize: "0.875rem", padding: "0.5rem 1.25rem" }}
             >
-              Shop on eBay
-            </a>
+              Shop Direct
+            </Link>
           </div>
 
           {/* Mobile hamburger */}
@@ -150,25 +154,32 @@ export default function Navbar() {
         style={{ background: "#111111" }}
       >
         <nav className="px-4 py-4 flex flex-col gap-1" aria-label="Mobile navigation">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="nav-link py-3 border-b border-[#222] text-base"
-              onClick={() => setIsOpen(false)}
-            >
-              {link.label}
-            </Link>
-          ))}
-          <a
-            href="https://www.ebay.com/str/atob"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-orange mt-4"
-            onClick={() => setIsOpen(false)}
-          >
-            Shop on eBay
-          </a>
+          {NAV_LINKS.map((link) =>
+            link.external ? (
+              <a
+                key={link.href}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="nav-link py-3 border-b border-[#222] text-base"
+                onClick={() => setIsOpen(false)}
+              >
+                {link.label}
+              </a>
+            ) : (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="nav-link py-3 border-b border-[#222] text-base"
+                onClick={() => setIsOpen(false)}
+              >
+                {link.label}
+              </Link>
+            )
+          )}
+          <Link href="/shop" className="btn-orange mt-4" onClick={() => setIsOpen(false)}>
+            Shop Direct
+          </Link>
         </nav>
       </div>
     </header>

@@ -43,7 +43,7 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <main style={{ minHeight: "100vh", background: "#0d0d0d", padding: 40, textAlign: "center" }}>
+      <main style={{ minHeight: "100vh", background: "#0d0d0d", padding: "100px 20px 60px", textAlign: "center" }}>
         <p style={{ color: "#A89880", marginBottom: 16 }}>Your cart is empty.</p>
         <Link href="/shop" style={{ color: "#D97706", fontWeight: 600 }}>Back to Shop</Link>
       </main>
@@ -51,7 +51,7 @@ export default function CartPage() {
   }
 
   return (
-    <main style={{ minHeight: "100vh", background: "#0d0d0d", padding: "40px 20px" }}>
+    <main style={{ minHeight: "100vh", background: "#0d0d0d", padding: "100px 20px 60px" }}>
       <div style={{ maxWidth: 600, margin: "0 auto" }}>
         <h1 style={{ color: "#F5EDD8", fontSize: 28, marginBottom: 24 }}>Your Cart</h1>
 

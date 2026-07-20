@@ -13,7 +13,7 @@ export default async function AdminProducts({ searchParams }: { searchParams: Pr
   const rows = (await db.execute("SELECT * FROM products ORDER BY created_at DESC")).rows as any[];
 
   return (
-    <main style={{ padding: 40, fontFamily: "system-ui", color: "#F5EDD8", background: "#0d0d0d", minHeight: "100vh" }}>
+    <main style={{ padding: "100px 40px 40px", fontFamily: "system-ui", color: "#F5EDD8", background: "#0d0d0d", minHeight: "100vh" }}>
       <h1 style={{ color: "#D97706" }}>Products ({rows.length})</h1>
       <p style={{ color: "#A89880", marginBottom: 16 }}>
         Auto-synced from eBay every night, or trigger it manually below. SKU shown is the eBay item ID —

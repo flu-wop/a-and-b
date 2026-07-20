@@ -59,17 +59,17 @@ export default async function HomePage() {
             manufacturing, agriculture, and more. Thousands of listings live on eBay right now.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link href="/shop" className="btn-orange text-lg">
+              Shop Direct
+            </Link>
             <a
               href="https://www.ebay.com/str/atob"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-orange text-lg"
+              className="btn-ghost"
             >
-              Shop Full Inventory on eBay
+              Shop on eBay
             </a>
-            <Link href="/shop" className="btn-ghost">
-              Browse Categories
-            </Link>
           </div>
           <p className="mt-5 text-sm text-text-muted drop-shadow">
             Have a question?{" "}

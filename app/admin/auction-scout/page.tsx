@@ -7,7 +7,7 @@ export default async function AdminAuctionScout({ searchParams }: { searchParams
   if (!isAdmin(resolvedParams)) return <AdminLocked />;
 
   return (
-    <main style={{ padding: 40, fontFamily: "system-ui", color: "#F5EDD8", background: "#0d0d0d", minHeight: "100vh" }}>
+    <main style={{ padding: "100px 40px 40px", fontFamily: "system-ui", color: "#F5EDD8", background: "#0d0d0d", minHeight: "100vh" }}>
       <h1 style={{ color: "#D97706" }}>Auction Scout</h1>
       <p style={{ color: "#A89880", marginTop: 8 }}>
         Admin-gated, matching the products/orders pages. This is the shell —

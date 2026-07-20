@@ -12,7 +12,7 @@ export default async function AdminOrders({ searchParams }: { searchParams: Prom
   const orders = (await db.execute("SELECT * FROM orders ORDER BY created_at DESC")).rows as any[];
 
   return (
-    <main style={{ padding: 40, fontFamily: "system-ui", color: "#F5EDD8", background: "#0d0d0d", minHeight: "100vh" }}>
+    <main style={{ padding: "100px 40px 40px", fontFamily: "system-ui", color: "#F5EDD8", background: "#0d0d0d", minHeight: "100vh" }}>
       <h1 style={{ color: "#D97706" }}>Orders ({orders.length})</h1>
       <table style={{ width: "100%", borderCollapse: "collapse", marginTop: 16 }}>
         <thead>
