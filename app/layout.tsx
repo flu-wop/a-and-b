@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     description: "Industrial Surplus & Heavy Equipment Parts – Family-Owned & Trusted",
     url: SITE_URL,
     siteName: "A&B Supply & Surplus",
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "A&B Supply & Surplus" }],
+    images: [{ url: "/family-cartoon.png", width: 1536, height: 1024, alt: "A&B Supply & Surplus — Bryan, family, and dog" }],
     locale: "en_US",
     type: "website",
   },
