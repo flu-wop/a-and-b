@@ -48,15 +48,13 @@ export default function Footer() {
               Family-owned and operated. Trusted source for quality industrial surplus, heavy equipment parts,
               hydraulics, electrical, and CNC/metalworking supplies.
             </p>
-            <a
-              href="https://www.ebay.com/str/atob"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/shop"
               className="btn-orange self-start mt-2"
               style={{ fontSize: "0.9rem", padding: "0.6rem 1.4rem" }}
             >
-              Shop Our eBay Store
-            </a>
+              Shop Direct
+            </Link>
           </div>
 
           {/* Quick links */}

@@ -121,14 +121,9 @@ export default function ContactPage() {
               </ul>
             </div>
 
-            <a
-              href="https://www.ebay.com/str/atob"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-orange"
-            >
-              Shop Our eBay Store
-            </a>
+            <Link href="/shop" className="btn-orange">
+              Shop Direct
+            </Link>
           </aside>
 
           {/* Form */}

@@ -38,17 +38,25 @@ export default function CartDrawer() {
     }
   }
 
-  if (!isOpen) return null;
-
   return (
     <>
-      {/* backdrop */}
+      {/* backdrop — fades in/out, and stops intercepting clicks when closed */}
       <div
         onClick={closeCart}
-        style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 100 }}
+        aria-hidden={!isOpen}
+        style={{
+          position: "fixed",
+          inset: 0,
+          background: "rgba(0,0,0,0.6)",
+          zIndex: 100,
+          opacity: isOpen ? 1 : 0,
+          pointerEvents: isOpen ? "auto" : "none",
+          transition: "opacity 0.3s ease",
+        }}
       />
-      {/* drawer */}
+      {/* drawer — slides in from the right, stays mounted so the transition can play */}
       <div
+        aria-hidden={!isOpen}
         style={{
           position: "fixed",
           top: 0,
@@ -62,6 +70,9 @@ export default function CartDrawer() {
           flexDirection: "column",
           padding: 24,
           overflowY: "auto",
+          transform: isOpen ? "translateX(0)" : "translateX(100%)",
+          transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+          pointerEvents: isOpen ? "auto" : "none",
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>

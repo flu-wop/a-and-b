@@ -295,12 +295,12 @@ export default function AboutPage() {
             Ready to find your part?
           </h2>
           <p className="text-text-muted mb-8">
-            Browse our full inventory on eBay or reach out directly — Bryan picks up.
+            Shop our full catalog direct, or reach out and Bryan picks up.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="https://www.ebay.com/str/atob" target="_blank" rel="noopener noreferrer" className="btn-orange text-lg">
-              Shop on eBay
-            </a>
+            <Link href="/shop" className="btn-orange text-lg">
+              Shop Direct
+            </Link>
             <Link href="/contact" className="btn-ghost">Contact Bryan</Link>
           </div>
         </div>
