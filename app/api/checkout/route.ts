@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import { getDb, initDb } from "@/lib/db";
+import { calculateShippingCents } from "@/lib/shipping";
 
 export const runtime = "nodejs";
 
@@ -83,11 +84,27 @@ export async function POST(req: Request) {
   }
 
   const stripe = getStripe();
+  const subtotalCents = line_items.reduce((sum, li) => sum + li.price_data.unit_amount * li.quantity, 0);
+  const shipping = calculateShippingCents(subtotalCents);
+
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
     payment_method_types: ["card"],
     line_items,
     shipping_address_collection: { allowed_countries: ["US"] },
+    shipping_options: [
+      {
+        shipping_rate_data: {
+          type: "fixed_amount",
+          fixed_amount: { amount: shipping.amountCents, currency: "usd" },
+          display_name: shipping.label,
+          delivery_estimate: {
+            minimum: { unit: "business_day", value: 3 },
+            maximum: { unit: "business_day", value: 7 },
+          },
+        },
+      },
+    ],
     success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/inventory?canceled=1`,
     customer_email,
