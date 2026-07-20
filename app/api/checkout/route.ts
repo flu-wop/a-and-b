@@ -114,7 +114,7 @@ export async function POST(req: Request) {
       },
     ],
     success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/inventory?canceled=1`,
+    cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/shop?canceled=1`,
     customer_email,
     metadata: {
       product_ids: JSON.stringify(items.map((i) => ({ id: i.product_id, qty: i.quantity }))),

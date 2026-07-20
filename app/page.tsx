@@ -101,7 +101,7 @@ export default function HomePage() {
             >
               Shop Full Inventory on eBay
             </a>
-            <Link href="/inventory" className="btn-ghost">
+            <Link href="/shop" className="btn-ghost">
               Browse Categories
             </Link>
           </div>

@@ -1,10 +1,20 @@
 "use client";
 
+import { useState, useMemo } from "react";
 import { useCart } from "@/lib/cart-context";
 import type { Product } from "@/lib/products";
 
 export default function ShopGrid({ products }: { products: Product[] }) {
   const { addItem, items, toggleCart } = useCart();
+  const [activeCategory, setActiveCategory] = useState<string>("All");
+
+  const categories = useMemo(() => {
+    const set = new Set<string>();
+    products.forEach((p) => set.add(p.category || "Surplus & Misc Industrial"));
+    return ["All", ...Array.from(set).sort()];
+  }, [products]);
+
+  const filtered = activeCategory === "All" ? products : products.filter((p) => (p.category || "Surplus & Misc Industrial") === activeCategory);
 
   if (products.length === 0) {
     return (
@@ -16,13 +26,40 @@ export default function ShopGrid({ products }: { products: Product[] }) {
 
   return (
     <>
-      <div style={{ marginBottom: 20 }}>
+      <div style={{ marginBottom: 20, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
         <button onClick={toggleCart} style={{ color: "#D97706", fontWeight: 600, background: "none", border: "none", cursor: "pointer", padding: 0, font: "inherit" }}>
           View Cart ({items.reduce((n, i) => n + i.quantity, 0)})
         </button>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 20 }}>
-        {products.map((p) => {
+
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 24 }}>
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setActiveCategory(cat)}
+            style={{
+              background: activeCategory === cat ? "#D97706" : "#1a1a1a",
+              color: activeCategory === cat ? "#111" : "#A89880",
+              border: "1px solid #333",
+              borderRadius: 999,
+              padding: "6px 14px",
+              fontSize: 13,
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            {cat} {cat !== "All" ? `(${products.filter((p) => (p.category || "Surplus & Misc Industrial") === cat).length})` : `(${products.length})`}
+          </button>
+        ))}
+      </div>
+
+      {filtered.length === 0 ? (
+        <div style={{ color: "#A89880", padding: 40, textAlign: "center", border: "1px dashed #333", borderRadius: 8 }}>
+          No items in this category right now.
+        </div>
+      ) : (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 20 }}>
+          {filtered.map((p) => {
           const inCart = items.find((i) => i.product_id === p.id);
           const atMax = inCart && inCart.quantity >= p.quantity;
           return (
@@ -73,7 +110,8 @@ export default function ShopGrid({ products }: { products: Product[] }) {
             </div>
           );
         })}
-      </div>
+        </div>
+      )}
     </>
   );
 }

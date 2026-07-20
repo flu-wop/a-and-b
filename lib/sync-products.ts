@@ -10,6 +10,30 @@ export interface SyncResult {
   failed: number;
 }
 
+// Same real, verified top-level categories used for the storefront nav
+// (confirmed working — see lib/ebay.ts / earlier storefront work). Matching
+// against real eBay category IDs here instead of guessing from title
+// keywords avoids the exact kind of misclassification that happened with
+// freight/weight keyword guessing before (small parts flagged incorrectly).
+const KNOWN_CATEGORIES: Record<string, string> = {
+  "92074": "Electrical Equipment & Supplies",
+  "42892": "Industrial Automation & Motion Controls",
+  "183978": "Hydraulics, Pneumatics, Pumps & Plumbing",
+  "257887": "Heavy Equipment, Parts & Attachments",
+  "11804": "CNC, Metalworking & Manufacturing",
+  "183900": "Fasteners & Hardware",
+  "181939": "Test, Measurement & Inspection",
+  "26261": "Surplus & Misc Industrial",
+};
+
+function matchCategory(item: any): string {
+  const categories: { categoryId: string }[] = item.categories ?? [];
+  for (const cat of categories) {
+    if (KNOWN_CATEGORIES[cat.categoryId]) return KNOWN_CATEGORIES[cat.categoryId];
+  }
+  return "Surplus & Misc Industrial"; // fallback bucket, matches the catch-all storefront category
+}
+
 export async function syncProductsFromEbay(): Promise<SyncResult> {
   await initDb();
   const db = getDb();
@@ -29,6 +53,7 @@ export async function syncProductsFromEbay(): Promise<SyncResult> {
     const priceCents = item.price?.value ? Math.round(Number(item.price.value) * 100) : 0;
     const condition = item.condition ?? "";
     const imageUrl = item.image?.imageUrl ?? item.thumbnailImages?.[0]?.imageUrl ?? "";
+    const category = matchCategory(item);
     // Browse API doesn't reliably expose live quantity in the summary view —
     // default to 1 (in stock) rather than guessing a number that could be wrong.
     const quantity = item.estimatedAvailabilities?.[0]?.estimatedAvailableQuantity ?? 1;
@@ -45,18 +70,19 @@ export async function syncProductsFromEbay(): Promise<SyncResult> {
     // sends everything in one shot.
     statements.push({
       sql: `
-        INSERT INTO products (sku, ebay_item_id, title, price_cents, quantity, condition, image_url, status)
-        VALUES (?, ?, ?, ?, ?, ?, ?, 'active')
+        INSERT INTO products (sku, ebay_item_id, title, price_cents, quantity, condition, image_url, category, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'active')
         ON CONFLICT(ebay_item_id) DO UPDATE SET
           title = excluded.title,
           price_cents = excluded.price_cents,
           quantity = excluded.quantity,
           condition = excluded.condition,
           image_url = excluded.image_url,
+          category = excluded.category,
           status = 'active',
           updated_at = datetime('now')
       `,
-      args: [ebayItemId, ebayItemId, title, priceCents, quantity, condition, imageUrl],
+      args: [ebayItemId, ebayItemId, title, priceCents, quantity, condition, imageUrl, category],
     });
   }
 

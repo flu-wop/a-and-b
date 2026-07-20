@@ -3,7 +3,7 @@ import Image from "next/image";
 
 const QUICK_LINKS = [
   { href: "/", label: "Home" },
-  { href: "/inventory", label: "Browse Inventory" },
+  { href: "/shop", label: "Shop Direct" },
   { href: "/about", label: "About Us" },
   { href: "/contact", label: "Contact" },
   { href: "https://www.ebay.com/str/atob", label: "eBay Store →", external: true },
