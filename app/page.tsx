@@ -1,53 +1,14 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import EbayListings from "@/components/EbayListings";
+import FeaturedProducts from "@/components/FeaturedProducts";
+import { getActiveProducts } from "@/lib/products";
 
 export const metadata: Metadata = {
   title: "A&B Supply & Surplus | Industrial Surplus & Heavy Equipment Parts",
   description:
     "Family-owned industrial surplus dealer. Heavy equipment parts, hydraulics, electrical, CNC/metalworking and more. Personally inspected, fast shipping.",
 };
-
-// ─── Category data ────────────────────────────────────────────────────────────
-const CATEGORIES = [
-  {
-    title: "Heavy Equipment Parts",
-    desc: "Buckets, blades, couplers, pins, and more for excavators, loaders, and dozers.",
-    ebayUrl: "https://www.ebay.com/sch/i.html?_ssn=atob&_nkw=heavy+equipment",
-    Icon: ExcavatorIcon,
-  },
-  {
-    title: "Hydraulics",
-    desc: "Cylinders, pumps, valves, hoses, and fittings for all makes and applications.",
-    ebayUrl: "https://www.ebay.com/sch/i.html?_ssn=atob&_nkw=hydraulic",
-    Icon: HydraulicIcon,
-  },
-  {
-    title: "Electrical & Controls",
-    desc: "Contactors, drives, PLCs, and panel components — tested surplus.",
-    ebayUrl: "https://www.ebay.com/sch/i.html?_ssn=atob&_nkw=electrical",
-    Icon: ElectricalIcon,
-  },
-  {
-    title: "CNC & Metalworking",
-    desc: "Tooling, fixtures, inserts, vises, chucks, and CNC machine components.",
-    ebayUrl: "https://www.ebay.com/sch/i.html?_ssn=atob&_nkw=cnc+metalworking",
-    Icon: CncIcon,
-  },
-  {
-    title: "Hardware & Fasteners",
-    desc: "Bulk bolts, nuts, specialty fasteners, and precision hardware.",
-    ebayUrl: "https://www.ebay.com/sch/i.html?_ssn=atob&_nkw=fasteners",
-    Icon: FastenerIcon,
-  },
-  {
-    title: "General Industrial Surplus",
-    desc: "Pneumatics, sensors, bearings, motors, and a wide variety of industrial goods.",
-    ebayUrl: "https://www.ebay.com/str/atob",
-    Icon: WarehouseIcon,
-  },
-];
 
 const TRUST_ITEMS = [
   { number: "400+", label: "eBay Listings" },
@@ -56,8 +17,13 @@ const TRUST_ITEMS = [
   { number: "Fast", label: "Shipping" },
 ];
 
+export const dynamic = "force-dynamic";
+
 // ─── Page ────────────────────────────────────────────────────────────────────
-export default function HomePage() {
+export default async function HomePage() {
+  const products = await getActiveProducts();
+  const featured = products.slice(0, 6);
+
   return (
     <>
       {/* ── HERO ──────────────────────────────────────────────────────────── */}
@@ -138,54 +104,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── CATEGORIES ────────────────────────────────────────────────────── */}
-      <section className="py-20 px-4 max-w-7xl mx-auto">
-        <div className="text-center mb-14">
-          <p className="eyebrow mb-3">What We Carry</p>
-          <h2 className="text-4xl sm:text-5xl text-white font-display">Browse Our Inventory</h2>
-          <div className="section-divider" />
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {CATEGORIES.map((cat) => (
-            <a
-              key={cat.title}
-              href={cat.ebayUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="category-card group"
-            >
-              <div className="flex items-start gap-4">
-                <cat.Icon className="w-8 h-8 text-orange shrink-0 mt-0.5" />
-                <div className="flex-1">
-                  <h3 className="text-text-primary font-semibold text-base mb-2 group-hover:text-orange-bright transition-colors font-condensed tracking-wide">
-                    {cat.title}
-                  </h3>
-                  <p className="text-text-dim text-sm leading-relaxed">{cat.desc}</p>
-                </div>
-              </div>
-              <div className="mt-4 flex items-center gap-2 text-orange text-xs font-semibold tracking-wider uppercase font-condensed">
-                <span>Shop on eBay</span>
-                <ArrowIcon className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </a>
-          ))}
-        </div>
-
-        <div className="text-center mt-12">
-          <a
-            href="https://www.ebay.com/str/atob"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-orange text-lg"
-          >
-            View All Listings on eBay
-          </a>
-        </div>
-      </section>
-
-      {/* ── EBAY LIVE LISTINGS ────────────────────────────────────────────── */}
-      <EbayListings />
+      {/* ── FEATURED LISTINGS (Shop Direct) ──────────────────────────────── */}
+      <FeaturedProducts products={featured} />
 
       {/* ── FAMILY SECTION ────────────────────────────────────────────────── */}
       <section
@@ -260,56 +180,5 @@ export default function HomePage() {
         </div>
       </section>
     </>
-  );
-}
-
-// ─── SVG Icons ───────────────────────────────────────────────────────────────
-function ExcavatorIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M2 20h20M6 20V10l4-4 5 4v6M11 20v-6" /><path d="M17 14h2a1 1 0 011 1v1a1 1 0 01-1 1h-2" />
-    </svg>
-  );
-}
-function HydraulicIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <rect x="5" y="6" width="14" height="12" rx="2" /><line x1="9" y1="6" x2="9" y2="18" /><line x1="15" y1="6" x2="15" y2="18" /><line x1="5" y1="12" x2="19" y2="12" /><line x1="12" y1="2" x2="12" y2="6" /><line x1="12" y1="18" x2="12" y2="22" />
-    </svg>
-  );
-}
-function ElectricalIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <polyline points="13 2 13 9 20 9 11 22 11 15 4 15 13 2" />
-    </svg>
-  );
-}
-function CncIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <circle cx="12" cy="12" r="3" /><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
-    </svg>
-  );
-}
-function FastenerIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
-    </svg>
-  );
-}
-function WarehouseIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" /><polyline points="9 22 9 12 15 12 15 22" />
-    </svg>
-  );
-}
-function ArrowIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M3 8h10M9 4l4 4-4 4" />
-    </svg>
   );
 }
