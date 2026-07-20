@@ -30,7 +30,18 @@ export default function ShopGrid({ products }: { products: Product[] }) {
               <div style={{ height: 120, background: "#111", borderRadius: 6, marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "center", color: "#444", fontSize: 12 }}>
                 {p.image_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={p.image_url} alt={p.title} style={{ maxHeight: "100%", maxWidth: "100%", objectFit: "contain" }} />
+                  <img
+                    src={p.image_url}
+                    alt={p.title}
+                    style={{ maxHeight: "100%", maxWidth: "100%", objectFit: "contain" }}
+                    onError={(e) => {
+                      // eBay CDN images can go dead if the source listing is pulled —
+                      // fall back to a text placeholder instead of a broken-image icon.
+                      (e.target as HTMLImageElement).style.display = "none";
+                      const parent = (e.target as HTMLImageElement).parentElement;
+                      if (parent) parent.textContent = "Image unavailable";
+                    }}
+                  />
                 ) : (
                   "No image"
                 )}

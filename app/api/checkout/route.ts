@@ -92,6 +92,14 @@ export async function POST(req: Request) {
     payment_method_types: ["card"],
     line_items,
     shipping_address_collection: { allowed_countries: ["US"] },
+    // Sales tax: OFF by default. Stripe Tax must be enabled in the Stripe
+    // Dashboard (with an origin address configured) before this can work —
+    // turning it on here before that's done would make checkout error out.
+    // Once Stripe Tax is set up, set STRIPE_AUTOMATIC_TAX_ENABLED=true in
+    // Vercel and this activates automatically, no code change needed.
+    ...(process.env.STRIPE_AUTOMATIC_TAX_ENABLED === "true"
+      ? { automatic_tax: { enabled: true } }
+      : {}),
     shipping_options: [
       {
         shipping_rate_data: {

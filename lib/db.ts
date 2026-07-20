@@ -48,6 +48,16 @@ export async function initDb() {
   `);
 
   await db.execute(`
+    CREATE TABLE IF NOT EXISTS ebay_seller_tokens (
+      id INTEGER PRIMARY KEY CHECK (id = 1),  -- single row: one seller account
+      access_token TEXT NOT NULL,
+      refresh_token TEXT NOT NULL,
+      expires_at TEXT NOT NULL,
+      updated_at TEXT DEFAULT (datetime('now'))
+    )
+  `);
+
+  await db.execute(`
     CREATE TABLE IF NOT EXISTS orders (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       customer_name TEXT NOT NULL,

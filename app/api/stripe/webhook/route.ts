@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import { getDb, initDb } from "@/lib/db";
+import { sendOrderEmails } from "@/lib/email";
+import { endEbayListing } from "@/lib/ebay-end-listing";
 
 export const runtime = "nodejs";
 
@@ -44,6 +46,7 @@ export async function POST(req: Request) {
       ],
     });
     const orderId = Number(orderRes.lastInsertRowid);
+    const emailItems: { title: string; sku: string; quantity: number; unit_price_cents: number }[] = [];
 
     for (const item of productIds) {
       const productRes = await db.execute({ sql: `SELECT * FROM products WHERE id = ?`, args: [item.id] });
@@ -54,6 +57,7 @@ export async function POST(req: Request) {
         sql: `INSERT INTO order_items (order_id, product_id, sku, title, unit_price_cents, quantity) VALUES (?, ?, ?, ?, ?, ?)`,
         args: [orderId, product.id, product.sku, product.title, product.price_cents, item.qty],
       });
+      emailItems.push({ title: product.title, sku: product.sku, quantity: item.qty, unit_price_cents: product.price_cents });
 
       const remaining = product.quantity - item.qty;
       await db.execute({
@@ -61,10 +65,33 @@ export async function POST(req: Request) {
         args: [remaining, remaining <= 0 ? "sold" : "active", product.id],
       });
 
-      // TODO(next phase): call eBay Trading API here to end/revise the matching
-      // eBay listing (product.ebay_item_id) so it can't sell there too.
+      // Stop the same item from also selling on eBay. Never let a failure
+      // here break the webhook — the sale on the site already succeeded and
+      // must not be rolled back over an eBay API hiccup.
+      if (remaining <= 0 && product.ebay_item_id) {
+        try {
+          const result = await endEbayListing(product.ebay_item_id);
+          if (!result.success) console.error("eBay end-listing failed:", result.message);
+        } catch (err) {
+          console.error("eBay end-listing threw:", err);
+        }
+      }
 
       await db.execute({ sql: `DELETE FROM reservations WHERE product_id = ?`, args: [product.id] });
+    }
+
+    // Never let an email failure look like an order failure — payment and
+    // fulfillment already succeeded by this point.
+    try {
+      await sendOrderEmails({
+        orderId,
+        customerName: s.customer_details?.name || "Unknown",
+        customerEmail: s.customer_details?.email || s.customer_email || "",
+        amountCents: s.amount_total,
+        items: emailItems,
+      });
+    } catch (err) {
+      console.error("Order email send threw:", err);
     }
   }
 

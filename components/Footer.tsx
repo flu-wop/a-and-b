@@ -112,7 +112,11 @@ export default function Footer() {
 
         <div className="mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-text-dim border-t border-[#2A2A2A]">
           <p>© {new Date().getFullYear()} A&amp;B Supply &amp; Surplus. All rights reserved.</p>
-          <p className="font-condensed tracking-wider">Family-Owned &amp; Operated · Wisconsin</p>
+          <div className="flex items-center gap-4">
+            <a href="/privacy" className="hover:text-orange transition-colors">Privacy Policy</a>
+            <a href="/terms" className="hover:text-orange transition-colors">Terms of Service</a>
+            <p className="font-condensed tracking-wider">Family-Owned &amp; Operated · Michigan</p>
+          </div>
         </div>
       </div>
     </footer>

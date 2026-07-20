@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "About Us",
-  description: "Meet Bryan Arfsten and the family behind A&B Supply & Surplus — Wisconsin-based industrial surplus specialists.",
+  description: "Meet Bryan Arfsten and the family behind A&B Supply & Surplus — Michigan-based industrial surplus specialists.",
 };
 
 const VALUES = [
@@ -29,8 +29,8 @@ const VALUES = [
     Icon: ReturnIcon,
   },
   {
-    title: "Wisconsin-Based",
-    desc: "Family-owned, Wisconsin-rooted. Supporting American industry one part at a time.",
+    title: "Michigan-Based",
+    desc: "Family-owned, Michigan-rooted. Supporting American industry one part at a time.",
     Icon: LocationIcon,
   },
   {
@@ -59,7 +59,7 @@ export default function AboutPage() {
             About A&amp;B Supply &amp; Surplus
           </h1>
           <p className="text-text-muted text-lg max-w-2xl mx-auto">
-            A Wisconsin family business with a warehouse full of quality industrial parts and the
+            A Michigan family business with a warehouse full of quality industrial parts and the
             work ethic to back it up.
           </p>
         </div>
@@ -96,7 +96,7 @@ export default function AboutPage() {
                 </div>
               </div>
               <div className="mt-4 p-3 rounded text-center text-sm bg-bg-card border border-[#333] text-text-dim font-condensed tracking-wide">
-                Bryan, the family, and one very good dog — Wisconsin
+                Bryan, the family, and one very good dog — Michigan
               </div>
             </div>
 
