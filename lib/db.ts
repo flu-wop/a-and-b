@@ -38,9 +38,13 @@ export async function initDb() {
     )
   `);
 
+  // If an earlier deploy already created the (buggy, partial) version of this
+  // index, IF NOT EXISTS below won't replace it — drop it first so the plain
+  // version always wins.
+  await db.execute(`DROP INDEX IF EXISTS idx_products_ebay_item_id`);
   await db.execute(`
     CREATE UNIQUE INDEX IF NOT EXISTS idx_products_ebay_item_id
-    ON products(ebay_item_id) WHERE ebay_item_id IS NOT NULL
+    ON products(ebay_item_id)
   `);
 
   await db.execute(`
