@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useCart } from "@/lib/cart-context";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -15,6 +16,7 @@ const NAV_LINKS = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { totalCount, toggleCart } = useCart();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40);
@@ -57,7 +59,36 @@ export default function Navbar() {
           </nav>
 
           {/* Desktop CTA */}
-          <div className="hidden md:flex items-center">
+          <div className="hidden md:flex items-center gap-4">
+            <button
+              onClick={toggleCart}
+              aria-label={`Open cart, ${totalCount} items`}
+              style={{ position: "relative", background: "none", border: "1px solid #333", borderRadius: 6, padding: "0.5rem 0.75rem", color: "#F5EDD8", cursor: "pointer" }}
+            >
+              Cart
+              {totalCount > 0 && (
+                <span
+                  style={{
+                    position: "absolute",
+                    top: -6,
+                    right: -6,
+                    background: "#D97706",
+                    color: "#111",
+                    borderRadius: "999px",
+                    fontSize: 11,
+                    fontWeight: 700,
+                    minWidth: 18,
+                    height: 18,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "0 4px",
+                  }}
+                >
+                  {totalCount}
+                </span>
+              )}
+            </button>
             <a
               href="https://www.ebay.com/str/atob"
               target="_blank"
@@ -70,16 +101,47 @@ export default function Navbar() {
           </div>
 
           {/* Mobile hamburger */}
-          <button
-            className="md:hidden flex flex-col gap-1.5 p-2"
-            onClick={() => setIsOpen(!isOpen)}
-            aria-label={isOpen ? "Close menu" : "Open menu"}
-            aria-expanded={isOpen}
-          >
-            <span className={`block w-6 h-0.5 bg-orange transition-all duration-300 ${isOpen ? "rotate-45 translate-y-2" : ""}`} />
-            <span className={`block w-6 h-0.5 bg-orange transition-all duration-300 ${isOpen ? "opacity-0" : ""}`} />
-            <span className={`block w-6 h-0.5 bg-orange transition-all duration-300 ${isOpen ? "-rotate-45 -translate-y-2" : ""}`} />
-          </button>
+          <div className="md:hidden flex items-center gap-2">
+            <button
+              onClick={toggleCart}
+              aria-label={`Open cart, ${totalCount} items`}
+              style={{ position: "relative", background: "none", border: "1px solid #333", borderRadius: 6, padding: "0.4rem 0.6rem", color: "#F5EDD8" }}
+            >
+              Cart
+              {totalCount > 0 && (
+                <span
+                  style={{
+                    position: "absolute",
+                    top: -6,
+                    right: -6,
+                    background: "#D97706",
+                    color: "#111",
+                    borderRadius: "999px",
+                    fontSize: 10,
+                    fontWeight: 700,
+                    minWidth: 16,
+                    height: 16,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "0 4px",
+                  }}
+                >
+                  {totalCount}
+                </span>
+              )}
+            </button>
+            <button
+              className="flex flex-col gap-1.5 p-2"
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label={isOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isOpen}
+            >
+              <span className={`block w-6 h-0.5 bg-orange transition-all duration-300 ${isOpen ? "rotate-45 translate-y-2" : ""}`} />
+              <span className={`block w-6 h-0.5 bg-orange transition-all duration-300 ${isOpen ? "opacity-0" : ""}`} />
+              <span className={`block w-6 h-0.5 bg-orange transition-all duration-300 ${isOpen ? "-rotate-45 -translate-y-2" : ""}`} />
+            </button>
+          </div>
         </div>
       </div>
 

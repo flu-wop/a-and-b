@@ -18,6 +18,10 @@ interface CartContextValue {
   clear: () => void;
   totalCents: number;
   totalCount: number;
+  isOpen: boolean;
+  openCart: () => void;
+  closeCart: () => void;
+  toggleCart: () => void;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -26,6 +30,7 @@ const STORAGE_KEY = "aandb-cart";
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [hydrated, setHydrated] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   // Load from localStorage once on mount (client-only — cart shouldn't leak
   // across devices/sessions, just persist through page reloads on this one).
@@ -53,6 +58,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
       return [...prev, { ...item, quantity: 1 }];
     });
+    // Adding an item opens the drawer immediately — the person shouldn't have
+    // to go hunt for a "View Cart" link to see what just happened.
+    setIsOpen(true);
   }
 
   function removeItem(product_id: number) {
@@ -75,7 +83,21 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const totalCount = items.reduce((sum, i) => sum + i.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ items, addItem, removeItem, updateQuantity, clear, totalCents, totalCount }}>
+    <CartContext.Provider
+      value={{
+        items,
+        addItem,
+        removeItem,
+        updateQuantity,
+        clear,
+        totalCents,
+        totalCount,
+        isOpen,
+        openCart: () => setIsOpen(true),
+        closeCart: () => setIsOpen(false),
+        toggleCart: () => setIsOpen((v) => !v),
+      }}
+    >
       {children}
     </CartContext.Provider>
   );

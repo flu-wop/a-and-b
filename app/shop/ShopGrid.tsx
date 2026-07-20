@@ -1,11 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { useCart } from "@/lib/cart-context";
 import type { Product } from "@/lib/products";
 
 export default function ShopGrid({ products }: { products: Product[] }) {
-  const { addItem, items } = useCart();
+  const { addItem, items, toggleCart } = useCart();
 
   if (products.length === 0) {
     return (
@@ -18,9 +17,9 @@ export default function ShopGrid({ products }: { products: Product[] }) {
   return (
     <>
       <div style={{ marginBottom: 20 }}>
-        <Link href="/shop/cart" style={{ color: "#D97706", fontWeight: 600 }}>
+        <button onClick={toggleCart} style={{ color: "#D97706", fontWeight: 600, background: "none", border: "none", cursor: "pointer", padding: 0, font: "inherit" }}>
           View Cart ({items.reduce((n, i) => n + i.quantity, 0)})
-        </Link>
+        </button>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 20 }}>
         {products.map((p) => {
