@@ -7,7 +7,6 @@ import { useCart } from "@/lib/cart-context";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
-  { href: "/inventory", label: "Inventory" },
   { href: "/shop", label: "Shop Direct" },
   { href: "/about", label: "About Us" },
   { href: "/contact", label: "Contact" },
@@ -63,9 +62,9 @@ export default function Navbar() {
             <button
               onClick={toggleCart}
               aria-label={`Open cart, ${totalCount} items`}
-              style={{ position: "relative", background: "none", border: "1px solid #333", borderRadius: 6, padding: "0.5rem 0.75rem", color: "#F5EDD8", cursor: "pointer" }}
+              style={{ position: "relative", background: "none", border: "1px solid #333", borderRadius: 6, padding: "0.5rem 0.6rem", color: "#F5EDD8", cursor: "pointer", display: "flex", alignItems: "center" }}
             >
-              Cart
+              <CartIcon />
               {totalCount > 0 && (
                 <span
                   style={{
@@ -105,9 +104,9 @@ export default function Navbar() {
             <button
               onClick={toggleCart}
               aria-label={`Open cart, ${totalCount} items`}
-              style={{ position: "relative", background: "none", border: "1px solid #333", borderRadius: 6, padding: "0.4rem 0.6rem", color: "#F5EDD8" }}
+              style={{ position: "relative", background: "none", border: "1px solid #333", borderRadius: 6, padding: "0.45rem 0.55rem", color: "#F5EDD8", display: "flex", alignItems: "center" }}
             >
-              Cart
+              <CartIcon size={18} />
               {totalCount > 0 && (
                 <span
                   style={{
@@ -173,5 +172,15 @@ export default function Navbar() {
         </nav>
       </div>
     </header>
+  );
+}
+
+function CartIcon({ size = 20 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="9" cy="21" r="1" />
+      <circle cx="20" cy="21" r="1" />
+      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+    </svg>
   );
 }
